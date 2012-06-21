@@ -126,11 +126,13 @@ EOT;
     }
 
     /**
-     * Login event handler.
+     * Push an event.
+     *
+     * @param event The event name.
+     * @param string data The event data.
      */
-    public function onLoginSuccess($event) {
-        $account = $event->get('account');
-        $this->getPusher()->trigger($this->get('channel'), 'login', sprintf(_zm('%s just logged in.'), $account->getFirstName()));
+    public function pushEvent($event, $data) {
+        $this->getPusher()->trigger($this->get('channel'), $event, $data);
     }
 
 }
