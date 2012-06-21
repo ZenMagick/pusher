@@ -54,10 +54,11 @@ class PusherPlugin extends Plugin {
         $this->addConfigValue('App Key', 'appKey', '', 'Your Application Key');
         $this->addConfigValue('App Secret', 'appSecret', '', 'Your Application Secret');
         $this->addConfigValue('Pusher Version', 'pusherVersion', '1.12', 'Pusher API version');
-        $this->addConfigValue('jQuery Version', 'jQuery', '1.7.1', 'Version of jQuery to include; leave empty if jQuery is already loaded');
-        $this->addConfigValue('Channel', 'channel', 'site-activity', 'The channel to subscribe to');
-        $this->addConfigValue('Activity Stream Support', 'activityStream', 'false', 'Enable activity stream support',
-            'widget@booleanFormWidget#name=activityStream&default=false&label=Enable Activity Stream&style=checkbox');
+        // this should be multiple blocks, to all different channel per page
+        $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy do disable)');
+        $this->addConfigValue('Channel', 'channel', 'test_channel', 'The channel to subscribe to');
+        $this->addConfigValue('Events', 'events', 'my_event', 'The subscribed events (comma separated)');
+        $this->addConfigValue('Max items', 'maxItems', '10', 'Maximum number of items to display');
     }
 
     /**
@@ -76,14 +77,11 @@ class PusherPlugin extends Plugin {
         if ($view instanceof TemplateView) {
             // got content, so lets see what we need to add
             $resourceManager = $view->getResourceManager();
-            if (Toolbox::asBoolean($this->get('activityStream'))) {
-                $jQuery = trim($this->get('jQuery'));
-                if (!empty($jQuery)) {
-                    $resourceManager->jsFile(sprintf('//code.jquery.com/jquery-%s.min.js', $jQuery), $resourceManager::FOOTER);
-                }
-                $resourceManager->jsFile(sprintf('//js.pusher.com/%s/pusher.min.js', $this->get('pusherVersion')), $resourceManager::FOOTER);
-                $resourceManager->jsFile('js/PusherActivityStreamer.js', $resourceManager::FOOTER);
+            if ($this->get('activityStream')) {
                 $resourceManager->cssFile('css/activity-streams.css');
+
+                //$resourceManager->jsFile(sprintf('//js.pusher.com/%s/pusher.min.js', $this->get('pusherVersion')), $resourceManager::FOOTER);
+                $resourceManager->jsFile('js/pusher.1.11.min.js', $resourceManager::FOOTER);
                 $resourceManager->jsFile('js/PusherActivityStreamer.js', $resourceManager::FOOTER);
             }
         }
@@ -95,17 +93,16 @@ class PusherPlugin extends Plugin {
     public function onFinaliseContent($event) {
         $code = null;
         $appKey = $this->get('appKey');
-        if (Toolbox::asBoolean($this->get('activityStream'))) {
-            $channel = $this->get('channel');
+        $activityStream = $this->get('activityStream');
+        if (!empty($activityStream)) {
+            $channel = trim($this->get('channel'));
+            $events = implode("', '", explode(',', trim($this->get('events'))));
+            $maxItems = $this->get('maxItems');
             $code = <<<EOT
 <script type="text/javascript">
-$(function() {
   var pusher = new Pusher('$appKey');
   var channel = pusher.subscribe('$channel');
-  //var streamer = new PusherActivityStreamer(channel, '#site_activity_stream', { events: ['my_event'] });
-    channel.bind('my_event', function(data) { alert('xx'+data); });
-
-});
+  new PusherActivityStreamer(channel, document.getElementById('$activityStream'), { maxItems: $maxItems, events: ['$events'] });
 </script>
 EOT;
         }
