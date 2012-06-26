@@ -31,6 +31,7 @@ use Pusher\Pusher;
  * @author DerManoMann <mano@zenmagick.org>
  */
 class PusherPlugin extends Plugin {
+    const EVENT_QUEUE_HISTORY_CACHE_KEY = 'zenmagick.plugins.pusher.EventQueueHistory';
     private $pusher;
 
 
@@ -84,6 +85,13 @@ class PusherPlugin extends Plugin {
                 $resourceManager->jsFile('js/pusher.1.11.min.js', $resourceManager::FOOTER);
                 $resourceManager->jsFile('js/PusherActivityStreamer.js', $resourceManager::FOOTER);
             }
+
+            // also provide a event queue history to pre-populate
+            $cache = $this->container->get('persistentCache');
+            if (null === ($eventQueueHistory = $cache->lookup(self::EVENT_QUEUE_HISTORY_CACHE_KEY))) {
+                  $eventQueueHistory = array();
+            }
+            $view->setVariable('eventQueueHistory', (array) $eventQueueHistory);
         }
     }
 
@@ -97,7 +105,7 @@ class PusherPlugin extends Plugin {
         if (!empty($activityStream)) {
             $channel = trim($this->get('channel'));
             $events = implode("', '", explode(',', trim($this->get('events'))));
-            $maxItems = $this->get('maxItems');
+            $maxItems = (int) $this->get('maxItems');
             $code = <<<EOT
 <script type="text/javascript">
   var pusher = new Pusher('$appKey');
@@ -132,6 +140,18 @@ EOT;
      * @param string data The event data.
      */
     public function pushEvent($event, $data) {
+        $maxItems = $this->get('maxItems');
+        $cache = $this->container->get('persistentCache');
+        if (null === ($eventQueueHistory = $cache->lookup(self::EVENT_QUEUE_HISTORY_CACHE_KEY))) {
+              $eventQueueHistory = array();
+        }
+        $eventQueueHistory[] = array('type' => $event, 'data' => $data);
+        if (count($eventQueueHistory) > $maxItems) {
+            array_shift($eventQueueHistory);
+        }
+
+        $cache->save($eventQueueHistory, self::EVENT_QUEUE_HISTORY_CACHE_KEY);
+
         $this->getPusher()->trigger($this->get('channel'), $event, $data);
     }
 

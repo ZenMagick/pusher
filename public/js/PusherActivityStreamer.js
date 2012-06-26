@@ -31,6 +31,7 @@ function PusherActivityStreamer(channel, container, options) {
 PusherActivityStreamer.stringActivityHandler = function(activity, type) {
   ++this.count;
   var li = document.createElement('li');
+  li.className = type;
   li.innerHTML = activity;
   this.container.insertBefore(li, this.container.firstChild);
   if (this.count > this.settings.maxItems) {
