@@ -55,10 +55,11 @@ class PusherPlugin extends Plugin {
         $this->addConfigValue('App Key', 'appKey', '', 'Your Application Key');
         $this->addConfigValue('App Secret', 'appSecret', '', 'Your Application Secret');
         $this->addConfigValue('Pusher Version', 'pusherVersion', '1.12', 'Pusher API version');
-        // this should be multiple blocks, to all different channel per page
+        // should be possible to add blocks of these: all different channel per page
         $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy do disable)');
         $this->addConfigValue('Channel', 'channel', 'test_channel', 'The channel to subscribe to');
         $this->addConfigValue('Events', 'events', 'my_event', 'The subscribed events (comma separated)');
+        $this->addConfigValue('Event Handler', 'eventHandler', 'PusherActivityStreamer.stringActivityHandler', 'JavaScript event handler');
         $this->addConfigValue('Max items', 'maxItems', '10', 'Maximum number of items to display');
     }
 
@@ -105,12 +106,13 @@ class PusherPlugin extends Plugin {
         if (!empty($activityStream)) {
             $channel = trim($this->get('channel'));
             $events = implode("', '", explode(',', trim($this->get('events'))));
+            $handler = trim($this->get('eventHandler'));
             $maxItems = (int) $this->get('maxItems');
             $code = <<<EOT
 <script type="text/javascript">
   var pusher = new Pusher('$appKey');
   var channel = pusher.subscribe('$channel');
-  new PusherActivityStreamer(channel, document.getElementById('$activityStream'), { maxItems: $maxItems, events: ['$events'] });
+  new PusherActivityStreamer(channel, document.getElementById('$activityStream'), { maxItems: $maxItems, events: ['$events'], handler: '$handler' });
 </script>
 EOT;
         }
