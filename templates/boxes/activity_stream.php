@@ -26,7 +26,7 @@
 <div id="sb_pusher_activities" class="box">
   <ul id="site_activity_stream" class="activity-stream">
     <?php foreach ($eventQueueHistory as $event) { ?>
-      <li class="<?php echo $event['type'] ?>"><?php echo $event['data'] ?></li>
+      <li class="<?php echo $event['type'] ?>"><?php echo $event['data']['msg'] ?></li>
     <?php } ?>
   </ul>
 </div>

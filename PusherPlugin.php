@@ -59,7 +59,7 @@ class PusherPlugin extends Plugin {
         $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy do disable)');
         $this->addConfigValue('Channel', 'channel', 'test_channel', 'The channel to subscribe to');
         $this->addConfigValue('Events', 'events', 'my_event', 'The subscribed events (comma separated)');
-        $this->addConfigValue('Event Handler', 'eventHandler', 'PusherActivityStreamer.stringActivityHandler', 'JavaScript event handler');
+        $this->addConfigValue('Event Handler', 'eventHandler', 'PusherActivityStreamer.defaultActivityHandler', 'JavaScript event handler ');
         $this->addConfigValue('Max items', 'maxItems', '10', 'Maximum number of items to display');
     }
 
@@ -112,7 +112,7 @@ class PusherPlugin extends Plugin {
 <script type="text/javascript">
   var pusher = new Pusher('$appKey');
   var channel = pusher.subscribe('$channel');
-  new PusherActivityStreamer(channel, document.getElementById('$activityStream'), { maxItems: $maxItems, events: ['$events'], handler: '$handler' });
+  new PusherActivityStreamer(channel, document.getElementById('$activityStream'), { maxItems: $maxItems, events: ['$events'], handler: $handler });
 </script>
 EOT;
         }
@@ -139,20 +139,24 @@ EOT;
      * Push an event.
      *
      * @param event The event name.
-     * @param string data The event data.
+     * @param mixed data The event data.
      */
     public function pushEvent($event, $data) {
-        $maxItems = $this->get('maxItems');
-        $cache = $this->container->get('persistentCache');
-        if (null === ($eventQueueHistory = $cache->lookup(self::EVENT_QUEUE_HISTORY_CACHE_KEY))) {
-              $eventQueueHistory = array();
-        }
-        $eventQueueHistory[] = array('type' => $event, 'data' => $data);
-        if (count($eventQueueHistory) > $maxItems) {
-            array_shift($eventQueueHistory);
-        }
+        $subscribed = explode(',', $this->get('events'));
+        // only keep if subscribed
+        if (in_array($event, $subscribed)) {
+            $cache = $this->container->get('persistentCache');
+            if (!$eventQueueHistory = $cache->lookup(self::EVENT_QUEUE_HISTORY_CACHE_KEY)) {
+                  $eventQueueHistory = array();
+            }
+            array_unshift($eventQueueHistory, array('type' => $event, 'data' => $data));
+            $maxItems = $this->get('maxItems');
+            if (count($eventQueueHistory) > $maxItems) {
+                array_shift($eventQueueHistory);
+            }
 
-        $cache->save($eventQueueHistory, self::EVENT_QUEUE_HISTORY_CACHE_KEY);
+            $cache->save($eventQueueHistory, self::EVENT_QUEUE_HISTORY_CACHE_KEY);
+        }
 
         $this->getPusher()->trigger($this->get('channel'), $event, $data);
     }

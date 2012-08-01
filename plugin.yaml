@@ -1,0 +1,7 @@
+storefront:
+  settings:
+    zenmagick:
+      base:
+        events:
+          listeners:
+            - zenmagick\plugins\pusher\PusherEventPusher
