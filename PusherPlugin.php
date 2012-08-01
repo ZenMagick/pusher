@@ -56,7 +56,7 @@ class PusherPlugin extends Plugin {
         $this->addConfigValue('App Secret', 'appSecret', '', 'Your Application Secret');
         $this->addConfigValue('Pusher Version', 'pusherVersion', '1.12', 'Pusher API version');
         // should be possible to add blocks of these: all different channel per page
-        $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy do disable)');
+        $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy to disable)');
         $this->addConfigValue('Channel', 'channel', 'test_channel', 'The channel to subscribe to');
         $this->addConfigValue('Events', 'events', 'my_event', 'The subscribed events (comma separated)');
         $this->addConfigValue('Event Handler', 'eventHandler', 'PusherActivityStreamer.defaultActivityHandler', 'JavaScript event handler ');
