@@ -152,7 +152,7 @@ EOT;
             array_unshift($eventQueueHistory, array('type' => $event, 'data' => $data));
             $maxItems = $this->get('maxItems');
             if (count($eventQueueHistory) > $maxItems) {
-                array_shift($eventQueueHistory);
+                array_pop($eventQueueHistory);
             }
 
             $cache->save($eventQueueHistory, self::EVENT_QUEUE_HISTORY_CACHE_KEY);
