@@ -5,3 +5,6 @@ storefront:
         events:
           listeners:
             - zenmagick\plugins\pusher\PusherEventPusher
+  autoload:
+    psr-0:
+      Pusher: vendor
