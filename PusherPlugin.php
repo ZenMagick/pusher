@@ -64,14 +64,6 @@ class PusherPlugin extends Plugin {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function init() {
-        parent::init();
-        $this->container->get('eventDispatcher')->listen($this);
-    }
-
-    /**
      * Inject scripts.
      */
     public function onViewStart($event) {
