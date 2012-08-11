@@ -1,3 +1,9 @@
+meta:
+  name: 'Pusher'
+  version: '${plugin.version}'
+  author: 'zenmagick.org'
+  description: 'Adds pusher support to the site.'
+
 storefront:
   settings:
     zenmagick:

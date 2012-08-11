@@ -32,16 +32,14 @@ use Pusher\Pusher;
  */
 class PusherPlugin extends Plugin {
     const EVENT_QUEUE_HISTORY_CACHE_KEY = 'zenmagick.plugins.pusher.EventQueueHistory';
-    private $pusher;
+    private $pusher = null;
 
 
     /**
      * Create new instance.
      */
     public function __construct() {
-        parent::__construct('Pusher', 'Adds pusher support to the site.', '${plugin.version}');
         $this->setContext('storefront');
-        $this->pusher = null;
     }
 
 
