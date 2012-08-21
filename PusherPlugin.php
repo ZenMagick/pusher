@@ -19,7 +19,7 @@
  */
 namespace zenmagick\plugins\pusher;
 
-use Plugin;
+use zenmagick\apps\store\plugins\Plugin;
 use zenmagick\base\Toolbox;
 use zenmagick\http\view\TemplateView;
 
@@ -34,32 +34,6 @@ class PusherPlugin extends Plugin {
     const EVENT_QUEUE_HISTORY_CACHE_KEY = 'zenmagick.plugins.pusher.EventQueueHistory';
     private $pusher = null;
 
-
-    /**
-     * Create new instance.
-     */
-    public function __construct() {
-        $this->setContext('storefront');
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function install() {
-        parent::install();
-
-        $this->addConfigValue('App Id', 'appId', '', 'Your Application Id');
-        $this->addConfigValue('App Key', 'appKey', '', 'Your Application Key');
-        $this->addConfigValue('App Secret', 'appSecret', '', 'Your Application Secret');
-        $this->addConfigValue('Pusher Version', 'pusherVersion', '1.12', 'Pusher API version');
-        // should be possible to add blocks of these: all different channel per page
-        $this->addConfigValue('Activity Stream', 'activityStream', 'site_activity_stream', 'Container (ul) id for activity stream (leave emtpy to disable)');
-        $this->addConfigValue('Channel', 'channel', 'test_channel', 'The channel to subscribe to');
-        $this->addConfigValue('Events', 'events', 'my_event', 'The subscribed events (comma separated)');
-        $this->addConfigValue('Event Handler', 'eventHandler', 'PusherActivityStreamer.defaultActivityHandler', 'JavaScript event handler ');
-        $this->addConfigValue('Max items', 'maxItems', '10', 'Maximum number of items to display');
-    }
 
     /**
      * Inject scripts.

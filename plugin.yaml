@@ -4,6 +4,60 @@ meta:
   author: 'zenmagick.org'
   description: 'Adds pusher support to the site.'
 
+  context: storefront
+
+  options:
+      properties:
+          appId:
+              title: 'App Id'
+              description: 'App Id'
+              type: text
+          appKey:
+              title: 'App Key'
+              description: 'Your Application Key'
+              type: text
+          appSecret:
+              title: 'App Secret'
+              description: 'Your Application Secret'
+              type: text
+          pusherVersion:
+              title: 'Pusher Version'
+              description: 'Pusher API Version'
+              type: text
+              config:
+                  default: '1.12'
+          # block of activity stream
+          activityStream:
+              title: 'Activity Stream'
+              description: 'Container (ul) id for activity stream (leave emtpy to disable)'
+              type: text
+              config:
+                  default: site_activity_stream
+          channel:
+              title: 'Channel'
+              description: 'The channel to subscribe to'
+              type: text
+              config:
+                  default: test_channel
+          events:
+              title: 'Events'
+              description: 'The subscribed events (comma separated)'
+              type: text
+              config:
+                  default: my_event
+          eventHandler:
+              title: 'Event Handler'
+              description: 'JavaScript event handler'
+              type: text
+              config:
+                  default: 'PusherActivityStreamer.defaultActivityHandler'
+          maxItems:
+              title: 'Max items'
+              description: 'Maximum number of items to display'
+              type: text
+              config:
+                  default: 10
+
 storefront:
   settings:
     zenmagick:
