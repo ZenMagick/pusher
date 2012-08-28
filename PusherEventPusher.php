@@ -63,10 +63,10 @@ die();
         $message = null;
         if ($account = $event->get('account')) {
             $address = $this->container->get('addressService')->getAddressForId($account->getDefaultAddressId());
-            $message = sprintf(_zm('%4$s <span class="pusr">%1$s</span> from %2$s just reviewed %3$s. Good work %1$s!'),
+            $message = sprintf(_zm('%4$s<div><span class="pusr">%1$s</span> from %2$s just reviewed <span class="ppr">%3$s</span>. Good work %1$s!</div>'),
                           $account->getFirstName(), $account->getCity(), $purl, $img);
         } else {
-            $message = sprintf(_zm('%2$s Just reviewed: %s.'), $purl, $Img);
+            $message = sprintf(_zm('%2$s Just reviewed: %s.'), $purl, $img);
         }
         $this->pushEvent('review', array('msg' => $message, 'ts' => time()));
     }
@@ -87,7 +87,7 @@ die();
 
         $account = $this->container->get('accountService')->getAccountForId($order->getAccountId());
         $address = $order->getBillingAddress();
-        $message = sprintf(_zm('%4$s <span class="pusr">%1$s</span> from %2$s just ordered %3$s. Keep riding %1$s:)'),
+        $message = sprintf(_zm('%4$s<div><span class="pusr">%1$s</span> from %2$s just ordered <span class="ppr">%3$s</span>. Keep riding %1$s:)</div>'),
                       $account->getFirstName(), $account->getCity(), $purl, $img);
         $this->pushEvent('order', array('msg' => $message, 'ts' => time()));
     }
@@ -104,7 +104,7 @@ die();
 
         $account = $event->get('account');
         $img = '<img width="40" height="43" src="'.$imgurl.'">';
-        $message = sprintf(_zm('%3$s <span class="pusr">%1$s</span> from %2$s just joined. Welcome to the ride %1$s:)'),
+        $message = sprintf(_zm('%3$s<div><span class="pusr">%1$s</span> from %2$s just joined. Welcome to the ride %1$s:)</div>'),
                       $account->getFirstName(), $account->getCity(), $img);
         $this->pushEvent('account', array('msg' => $message, 'ts' => time()));
     }
