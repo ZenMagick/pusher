@@ -64,7 +64,7 @@ storefront:
       base:
         events:
           listeners:
-            - zenmagick\plugins\pusher\PusherEventPusher
+            - ZenMagick\plugins\pusher\PusherEventPusher
   autoload:
     psr-0:
       Pusher: vendor

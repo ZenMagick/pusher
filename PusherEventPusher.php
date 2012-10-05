@@ -17,10 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
-namespace zenmagick\plugins\pusher;
+namespace ZenMagick\plugins\pusher;
 
-use zenmagick\base\Toolbox;
-use zenmagick\base\ZMObject;
+use ZenMagick\Base\Toolbox;
+use ZenMagick\Base\ZMObject;
 
 /**
  * Pusher event pusher.
@@ -33,9 +33,9 @@ class PusherEventPusher extends ZMObject {
 if (false) {
 $account = $this->container->get('accountService')->getAccountForId(17);
 $product = $this->container->get('productService')->getProductForId(2, 1);
-$this->onReviewSubmitted(new \zenmagick\base\events\Event($this, array('account' => $account, 'product' => $product, 'request' => $event->get('request'))));
-$this->onCreateOrder(new \zenmagick\base\events\Event($this, array('account' => $account, 'orderId' => 1, 'request' => $event->get('request'))));
-$this->onCreateAccount(new \zenmagick\base\events\Event($this, array('account' => $account, 'request' => $event->get('request'))));
+$this->onReviewSubmitted(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'product' => $product, 'request' => $event->get('request'))));
+$this->onCreateOrder(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'orderId' => 1, 'request' => $event->get('request'))));
+$this->onCreateAccount(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'request' => $event->get('request'))));
 die();
 }
     }
