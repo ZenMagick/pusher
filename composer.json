@@ -1,9 +1,10 @@
 {
     "name": "zenmagick/plugin-pusher",
+    "type": "zenmagick-plugin",
     "description": "Add support for the pusher API (http://pusher.com) to ZenMagick",
     "license": "GPL-2.0+",
     "require": {
-        "zenmagick/plugin-installer": "*"
+        "zenmagick/zenmagick-installer": "*"
     },
     "authors": [
         {
