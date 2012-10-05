@@ -1,0 +1,14 @@
+{
+    "name": "zenmagick/plugin-pusher",
+    "description": "Add support for the pusher API (http://pusher.com) to ZenMagick",
+    "license": "GPL-2.0+",
+    "require": {
+        "zenmagick/plugin-installer": "*"
+    },
+    "authors": [
+        {
+            "name": "Martin Rademacher",
+            "email": "mano@zenmagick.org"
+        }
+    ]
+}
