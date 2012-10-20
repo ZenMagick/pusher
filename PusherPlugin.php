@@ -39,7 +39,7 @@ class PusherPlugin extends Plugin {
      * Inject scripts.
      */
     public function onViewStart($event) {
-        $view = $event->get('view');
+        $view = $event->getArgument('view');
         if ($view instanceof TemplateView) {
             // got content, so lets see what we need to add
             $resourceManager = $view->getResourceManager();
@@ -82,9 +82,9 @@ EOT;
         }
 
         if ($code) {
-            $content = $event->get('content');
+            $content = $event->getArgument('content');
             $content = preg_replace('/<\/body>/', $code . '</body>', $content, 1);
-            $event->set('content', $content);
+            $event->setArgument('content', $content);
         }
     }
 

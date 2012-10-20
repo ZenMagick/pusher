@@ -33,9 +33,9 @@ class PusherEventPusher extends ZMObject {
 if (false) {
 $account = $this->container->get('accountService')->getAccountForId(17);
 $product = $this->container->get('productService')->getProductForId(2, 1);
-$this->onReviewSubmitted(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'product' => $product, 'request' => $event->get('request'))));
-$this->onCreateOrder(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'orderId' => 1, 'request' => $event->get('request'))));
-$this->onCreateAccount(new \ZenMagick\Base\Events\Event($this, array('account' => $account, 'request' => $event->get('request'))));
+$this->onReviewSubmitted(new \Symfony\Component\EventDispatcher\GenericEvent($this, array('account' => $account, 'product' => $product, 'request' => $event->getArgument('request'))));
+$this->onCreateOrder(new \Symfony\Component\EventDispatcher\GenericEvent($this, array('account' => $account, 'orderId' => 1, 'request' => $event->getArgument('request'))));
+$this->onCreateAccount(new \Symfony\Component\EventDispatcher\GenericEvent($this, array('account' => $account, 'request' => $event->getArgument('request'))));
 die();
 }
     }
@@ -55,13 +55,13 @@ die();
      * Review submitted.
      */
     public function onReviewSubmitted($event) {
-        $toolbox = $event->get('request')->getToolbox();
-        $product = $event->get('product');
+        $toolbox = $event->getArgument('request')->getToolbox();
+        $product = $event->getArgument('product');
         $purl = sprintf('<a href="%s">%s</a>', $toolbox->net->product($product->getId()), $product->getName());
         $imgurl = $toolbox->html->image($product->getImageInfo(), 'small', 'width=40&height=43');
         $img = '<a href="'.$toolbox->net->product($product->getId()).'">'.$imgurl.'</a>';
         $message = null;
-        if ($account = $event->get('account')) {
+        if ($account = $event->getArgument('account')) {
             $address = $this->container->get('addressService')->getAddressForId($account->getDefaultAddressId());
             $message = sprintf(_zm('%4$s<div><span class="pusr">%1$s</span> from %2$s just reviewed <span class="ppr">%3$s</span>. Good work %1$s!</div>'),
                           $account->getFirstName(), $account->getCity(), $purl, $img);
@@ -75,9 +75,9 @@ die();
      * Order created.
      */
     public function onCreateOrder($event) {
-        $toolbox = $event->get('request')->getToolbox();
+        $toolbox = $event->getArgument('request')->getToolbox();
         $languageId = $this->container->get('session')->getLanguageId();
-        $order = $this->container->get('orderService')->getOrderForId($event->get('orderId'), $languageId);
+        $order = $this->container->get('orderService')->getOrderForId($event->getArgument('orderId'), $languageId);
         $items = $order->getOrderItems();
         // pick product
         $product = $items[0]->getProduct();
@@ -102,7 +102,7 @@ die();
             $imgurl = $resourceManager->file2uri($path);
         }
 
-        $account = $event->get('account');
+        $account = $event->getArgument('account');
         $img = '<img width="40" height="43" src="'.$imgurl.'">';
         $message = sprintf(_zm('%3$s<div><span class="pusr">%1$s</span> from %2$s just joined. Welcome to the ride %1$s:)</div>'),
                       $account->getFirstName(), $account->getCity(), $img);
