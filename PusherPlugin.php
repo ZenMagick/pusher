@@ -20,7 +20,6 @@
 namespace ZenMagick\plugins\pusher;
 
 use ZenMagick\Base\Plugins\Plugin;
-use ZenMagick\Base\Toolbox;
 use ZenMagick\Http\View\TemplateView;
 
 use Pusher\Pusher;
@@ -30,15 +29,16 @@ use Pusher\Pusher;
  *
  * @author DerManoMann <mano@zenmagick.org>
  */
-class PusherPlugin extends Plugin {
+class PusherPlugin extends Plugin
+{
     const EVENT_QUEUE_HISTORY_CACHE_KEY = 'zenmagick.plugins.pusher.EventQueueHistory';
     private $pusher = null;
-
 
     /**
      * Inject scripts.
      */
-    public function onViewStart($event) {
+    public function onViewStart($event)
+    {
         $view = $event->getArgument('view');
         if ($view instanceof TemplateView) {
             // got content, so lets see what we need to add
@@ -63,7 +63,8 @@ class PusherPlugin extends Plugin {
     /**
      * Inject streamer.
      */
-    public function onFinaliseContent($event) {
+    public function onFinaliseContent($event)
+    {
         $code = null;
         $appKey = $this->get('appKey');
         $activityStream = $this->get('activityStream');
@@ -91,7 +92,8 @@ EOT;
     /**
      * Get a pusher instance.
      */
-    public function getPusher() {
+    public function getPusher()
+    {
         if (null == $this->pusher) {
             $this->pusher = new Pusher($this->get('appKey'), $this->get('appSecret'), $this->get('appId'));
         }
@@ -105,7 +107,8 @@ EOT;
      * @param event The event name.
      * @param mixed data The event data.
      */
-    public function pushEvent($event, $data) {
+    public function pushEvent($event, $data)
+    {
         $subscribed = explode(',', $this->get('events'));
         // only keep if subscribed
         if (in_array($event, $subscribed)) {

@@ -27,9 +27,10 @@ use ZenMagick\Base\ZMObject;
  *
  * @author DerManoMann <mano@zenmagick.org>
  */
-class PusherEventPusher extends ZMObject {
-
-    public function onViewStart($event) {
+class PusherEventPusher extends ZMObject
+{
+    public function onViewStart($event)
+    {
 if (false) {
 $account = $this->container->get('accountService')->getAccountForId(17);
 $product = $this->container->get('productService')->getProductForId(2, 1);
@@ -45,7 +46,8 @@ die();
      * @param event The event name.
      * @param mixed data The event data.
      */
-    public function pushEvent($event, $data) {
+    public function pushEvent($event, $data)
+    {
         if ($plugin = $this->container->get('pluginService')->getPluginForId('pusher')) {
             $plugin->pushEvent($event, $data);
         }
@@ -54,7 +56,8 @@ die();
     /**
      * Review submitted.
      */
-    public function onReviewSubmitted($event) {
+    public function onReviewSubmitted($event)
+    {
         $toolbox = $event->getArgument('request')->getToolbox();
         $product = $event->getArgument('product');
         $purl = sprintf('<a href="%s">%s</a>', $toolbox->net->product($product->getId()), $product->getName());
@@ -74,7 +77,8 @@ die();
     /**
      * Order created.
      */
-    public function onCreateOrder($event) {
+    public function onCreateOrder($event)
+    {
         $toolbox = $event->getArgument('request')->getToolbox();
         $languageId = $this->container->get('session')->getLanguageId();
         $order = $this->container->get('orderService')->getOrderForId($event->getArgument('orderId'), $languageId);
@@ -95,7 +99,8 @@ die();
     /**
      * Account created.
      */
-    public function onCreateAccount($event) {
+    public function onCreateAccount($event)
+    {
         $resourceResolver = $this->container->get('themeResourceResolver');
         $resourceManager = $this->container->get('defaultView')->getResourceManager();
         if (null != ($path = $resourceResolver->findResource('resource:images/create_account.png'))) {
